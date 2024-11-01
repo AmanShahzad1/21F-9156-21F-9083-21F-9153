@@ -34,8 +34,8 @@ jobs:
         env:
           TAG: ${{ github.sha }}
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/myapp:$TAG .
-          docker push ${{ secrets.DOCKER_USERNAME }}/myapp:$TAG
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my_ror_app:v1 .
+          docker push ${{ secrets.DOCKER_USERNAME }}/my_ror_app:v1
 
   # 2. Unit Test Job
   test:
@@ -51,7 +51,8 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          docker run --rm ${{ secrets.DOCKER_USERNAME }}/myapp:$TAG bundle exec rspec
+          docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
+
 
   # 3. Linter Job
   lint:
