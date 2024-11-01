@@ -34,8 +34,8 @@ jobs:
         env:
           TAG: ${{ github.sha }}
         run: |
-          docker build -t ${{ secrets.DOCKER_USERNAME }}/my_ror_app:v1 .
-          docker push ${{ secrets.DOCKER_USERNAME }}/my_ror_app:v1
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/my_ror_app:$TAG .
+          docker push ${{ secrets.DOCKER_USERNAME }}/my_ror_app:$TAG
 
   # 2. Unit Test Job
   test:
