@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
   libsqlite3-dev \
   nodejs \      
   yarn \             
-  entr               
+  entr             
 
 # Copy Gemfile and Gemfile.lock first to take advantage of Docker caching
 # Copy Gemfile and Gemfile.lock to the working directory in the container
