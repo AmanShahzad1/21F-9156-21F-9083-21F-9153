@@ -10,10 +10,11 @@ WORKDIR /myapp
 # Update the package list and install necessary packages for building Ruby gems and running the app
 RUN apt-get update && apt-get install -y \
   build-essential \ 
-  libsqlite3-dev \
-  nodejs \      
+  libsqlite3-dev \      
   yarn \             
-  entr             
+  entr \
+  ruby rubocop && \
+  rm -rf /var/lib/apt/lists/*  # Clean up            
 
 # Copy Gemfile and Gemfile.lock first to take advantage of Docker caching
 # Copy Gemfile and Gemfile.lock to the working directory in the container
