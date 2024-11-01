@@ -1,0 +1,12 @@
+resources:
+- deployment.yaml
+- service.yaml
+- statefulset.yaml
+- pvc.yaml
+- ingress.yaml
+- rbac.yaml
+- secrets.yaml
+- network-policy.yaml
+- fluentd.yaml
+- elasticsearch.yaml
+- kibana.yaml
