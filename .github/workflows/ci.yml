@@ -60,42 +60,42 @@ jobs:
         run: |
           docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
 
-   # Linter Job
- lint:
-   runs-on: ubuntu-latest
-   needs: cache
-   steps:
-     - name: Checkout code
-      uses: actions/checkout@v2
+  # Linter Job
+  lint:
+    runs-on: ubuntu-latest
+    needs: cache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-     - name: Install dependencies
-       run: |
-         sudo apt-get update && sudo apt-get install -y ruby
-         gem install bundler --user-install
-         echo "export PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
-         bundle config set --local path 'vendor/bundle'
-         bundle install
+      - name: Install dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y ruby
+          gem install bundler --user-install
+          echo "export PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+          bundle config set --local path 'vendor/bundle'
+          bundle install
 
-     - name: Run RuboCop
-       run: |
-         bundle exec rubocop
+      - name: Run RuboCop
+        run: |
+          bundle exec rubocop
 
 # SAST Job
- sast:
-   runs-on: ubuntu-latest
-   needs: cache
-   steps:
-     - name: Checkout code
-       uses: actions/checkout@v2 
+  sast:
+    runs-on: ubuntu-latest
+    needs: cache
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2 
 
-     - name: Install dependencies for Brakeman
-       run: |
-         gem install brakeman --user-install
-         echo "export PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+      - name: Install dependencies for Brakeman
+        run: |
+          gem install brakeman --user-install
+          echo "export PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
 
-     - name: Run Brakeman
-       run: |
-         brakeman
+      - name: Run Brakeman
+        run: |
+          brakeman
 
 
   # Test results as artifacts
