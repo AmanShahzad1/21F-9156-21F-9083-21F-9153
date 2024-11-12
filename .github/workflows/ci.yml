@@ -68,25 +68,34 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Ruby and Bundler
+      - name: Install Ruby 3.1.2 using rbenv
         run: |
-          sudo apt-get update && sudo apt-get install -y ruby
-          gem install bundler --user-install
-          # Ensure that the bundler binary location is added to the PATH
-          echo "PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+          # Install rbenv and dependencies
+          sudo apt-get install -y libssl-dev libreadline-dev zlib1g-dev
+          git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+          git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+          source ~/.bashrc
+          # Install Ruby 3.1.2
+          rbenv install 3.1.2
+          rbenv global 3.1.2
+
+      - name: Install Bundler 2.3.11
+        run: |
+          gem install bundler -v 2.3.11 --user-install
+          echo "PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.1.2/bin" >> $GITHUB_ENV
         shell: bash
 
       - name: Install dependencies with bundler
         run: |
-          # Ensure the PATH is updated and bundler is available
-          export PATH="$PATH:$HOME/.local/share/gem/ruby/3.0.0/bin"
+          export PATH="$PATH:$HOME/.local/share/gem/ruby/3.1.2/bin"
           bundle config set --local path 'vendor/bundle'
           bundle install
 
       - name: Run RuboCop
         run: |
-          # Ensure the PATH is updated and bundler is available
-          export PATH="$PATH:$HOME/.local/share/gem/ruby/3.0.0/bin"
+          export PATH="$PATH:$HOME/.local/share/gem/ruby/3.1.2/bin"
           bundle exec rubocop
 
   # SAST Job
