@@ -70,16 +70,20 @@ jobs:
 
       - name: Install Ruby 3.1.2 using rbenv
         run: |
-          # Install rbenv and dependencies
+          # Install dependencies
           sudo apt-get install -y libssl-dev libreadline-dev zlib1g-dev
+          # Install rbenv and ruby-build
           git clone https://github.com/rbenv/rbenv.git ~/.rbenv
           git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+          # Add rbenv to PATH and initialize it
           echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
           echo 'eval "$(rbenv init -)"' >> ~/.bashrc
           source ~/.bashrc
           # Install Ruby 3.1.2
-          rbenv install 3.1.2
-          rbenv global 3.1.2
+          ~/.rbenv/bin/rbenv install 3.1.2
+          ~/.rbenv/bin/rbenv global 3.1.2
+          # Verify ruby version
+          ruby -v
 
       - name: Install Bundler 2.3.11
         run: |
