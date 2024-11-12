@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
   libsqlite3-dev \      
   yarn \             
   entr \
-  ruby rubocop \
+  ruby rubocop && \
   rm -rf /var/lib/apt/lists/*  # Clean up            
 
 # Copy Gemfile and Gemfile.lock first to take advantage of Docker caching
