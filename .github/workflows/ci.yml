@@ -9,14 +9,9 @@ on:
       - main
 
 jobs:
-  # 1. Build Job
+  # Build Job
   build:
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:stable
-        options: --privileged
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -37,7 +32,7 @@ jobs:
           docker build -t ${{ secrets.DOCKER_USERNAME }}/my_ror_app:$TAG .
           docker push ${{ secrets.DOCKER_USERNAME }}/my_ror_app:$TAG
 
-  # 2. Unit Test Job
+  # Unit Test Job
   test:
     runs-on: ubuntu-latest
     needs: build
@@ -46,15 +41,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-
       - name: Run Unit Tests
         run: |
-          docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle install
           docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
 
-  # 3. Linter Job
+  # Linter Job
   lint:
     runs-on: ubuntu-latest
     needs: build
@@ -63,15 +54,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install dependencies for RuboCop
         run: |
-          apt-get update && apt-get install -y ruby rubocop
+          sudo apt-get update && sudo apt-get install -y ruby rubocop
 
       - name: Run RuboCop
         run: |
           rubocop
 
-  # 4. SAST Job
+  # SAST Job
   sast:
     runs-on: ubuntu-latest
     needs: build
@@ -80,14 +71,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install dependencies for Brakeman
+        run: |
+          gem install brakeman
+
       - name: Run Brakeman
         run: |
           brakeman
 
-  # Optimization settings
+  # Optimization settings for caching
   cache:
     runs-on: ubuntu-latest
-
     steps:
       - name: Cache Ruby gems
         uses: actions/cache@v2
@@ -107,4 +101,3 @@ jobs:
         with:
           name: test-results
           path: tmp/test-results
-
