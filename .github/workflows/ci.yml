@@ -68,11 +68,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies
+      - name: Install Ruby and Bundler
         run: |
           sudo apt-get update && sudo apt-get install -y ruby
           gem install bundler --user-install
-          echo "export PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+          echo "PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Source updated PATH
+        run: |
+          source $GITHUB_ENV
           bundle config set --local path 'vendor/bundle'
           bundle install
 
@@ -80,23 +85,24 @@ jobs:
         run: |
           bundle exec rubocop
 
-# SAST Job
+  # SAST Job
   sast:
     runs-on: ubuntu-latest
     needs: cache
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2 
+        uses: actions/checkout@v2
 
-      - name: Install dependencies for Brakeman
+      - name: Install Brakeman for SAST
         run: |
           gem install brakeman --user-install
-          echo "export PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+          echo "PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+        shell: bash
 
-      - name: Run Brakeman
+      - name: Source updated PATH
         run: |
+          source $GITHUB_ENV
           brakeman
-
 
   # Test results as artifacts
   upload-test-results:
