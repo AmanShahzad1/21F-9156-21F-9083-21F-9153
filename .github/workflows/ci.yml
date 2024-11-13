@@ -60,35 +60,38 @@ jobs:
         run: |
           docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
   
+ # Linter Job
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies for rbenv (in lint job)
+      - name: Install dependencies for rbenv
         run: |
           sudo apt-get update
           sudo apt-get install -y libreadline-dev libssl-dev zlib1g-dev git
           curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer | bash
-
-          # Ensure rbenv is in the PATH for the current session
           export PATH="$HOME/.rbenv/bin:$PATH"
           eval "$(rbenv init -)"
-
-          # Install Ruby version 3.1.2
+          source ~/.bashrc
           rbenv install 3.1.2
           rbenv global 3.1.2
-          ruby -v  # Verify Ruby version
+          ruby -v
 
       - name: Install Bundler
         run: |
+          source ~/.bashrc
           gem install bundler -v 2.3.11 --user-install
-
+          export PATH="$HOME/.local/share/gem/ruby/3.1.2/bin:$PATH"
+          echo "Bundler installed at: $(which bundler)"
+        
       - name: Run RuboCop
         run: |
+          source ~/.bashrc
           bundle exec rubocop
-      
+
+# SAST Job
   sast:
     runs-on: ubuntu-latest
     needs: cache
@@ -96,28 +99,28 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies for rbenv (in sast job)
+      - name: Install dependencies for rbenv
         run: |
           sudo apt-get update
           sudo apt-get install -y libreadline-dev libssl-dev zlib1g-dev git
           curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer | bash
-
-          # Ensure rbenv is in the PATH for the current session
           export PATH="$HOME/.rbenv/bin:$PATH"
           eval "$(rbenv init -)"
-
-          # Install Ruby version 3.1.2
+          source ~/.bashrc
           rbenv install 3.1.2
           rbenv global 3.1.2
-          ruby -v  # Verify Ruby version
+          ruby -v
 
       - name: Install Brakeman for SAST
         run: |
           gem install brakeman --user-install
-
+          export PATH="$HOME/.local/share/gem/ruby/3.1.2/bin:$PATH"
+        
       - name: Run Brakeman
         run: |
+          source ~/.bashrc
           brakeman
+
 
   # Test results as artifacts
   upload-test-results:
