@@ -60,21 +60,28 @@ jobs:
         run: |
           docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
   
+
   # Linter Job
   lint:
     runs-on: ubuntu-latest
-    needs: cache
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Ruby and Bundler System-Wide
+      - name: Install Ruby
         run: |
           sudo apt-get update
           sudo apt-get install -y ruby-full
-          gem install bundler -v 2.3.11
           ruby -v
-          bundler -v
+
+      - name: Install Bundler Locally
+        run: |
+          gem install bundler -v 2.3.11 --user-install
+          echo "PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Load Updated PATH for Bundler
+        run: source $GITHUB_ENV
 
       - name: Install dependencies with Bundler
         run: |
@@ -84,7 +91,6 @@ jobs:
       - name: Run RuboCop
         run: |
           bundle exec rubocop
-          
           
   # SAST Job
   sast:
