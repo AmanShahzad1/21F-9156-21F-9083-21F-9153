@@ -71,6 +71,7 @@ jobs:
       - name: Install Ruby 3.1.2 using rbenv
         run: |
           # Install dependencies
+          sudo apt-get update
           sudo apt-get install -y libssl-dev libreadline-dev zlib1g-dev
           # Install rbenv and ruby-build
           git clone https://github.com/rbenv/rbenv.git ~/.rbenv
@@ -79,34 +80,27 @@ jobs:
           echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
           echo 'eval "$(rbenv init -)"' >> ~/.bashrc
           source ~/.bashrc
-          #Install Ruby 3.1.2
+          # Install Ruby 3.1.2
           ~/.rbenv/bin/rbenv install 3.1.2
           ~/.rbenv/bin/rbenv global 3.1.2
-          # Verify ruby version
           ruby -v
 
       - name: Install Bundler 2.3.11
         run: |
-          # Install bundler
           gem install bundler -v 2.3.11 --user-install
-          # Update PATH for Bundler
-          echo "export PATH=\$HOME/.local/share/gem/ruby/3.1.2/bin:\$PATH" >> ~/.bashrc
+          echo "PATH=$HOME/.local/share/gem/ruby/3.1.2/bin:$PATH" >> ~/.bashrc
           source ~/.bashrc
-          # Verify bundler installation
-          bundler -v
-        shell: bash
+          bundle -v
 
       - name: Install dependencies with bundler
         run: |
-          # Ensure bundler is available
-          export PATH="$HOME/.local/share/gem/ruby/3.1.2/bin:$PATH"
+          source ~/.bashrc
           bundle config set --local path 'vendor/bundle'
           bundle install
 
       - name: Run RuboCop
         run: |
-          # Ensure bundler is available
-          export PATH="$HOME/.local/share/gem/ruby/3.1.2/bin:$PATH"
+          source ~/.bashrc
           bundle exec rubocop
 
   # SAST Job
