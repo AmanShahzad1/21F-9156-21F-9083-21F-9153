@@ -78,20 +78,22 @@ jobs:
       - name: Install Bundler Locally
         run: |
           gem install bundler -v 2.3.11 --user-install
-          echo "PATH=\$PATH:\$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+          echo "PATH=$PATH:$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
+          source $GITHUB_ENV  # Immediately source the updated PATH to make Bundler available
         shell: bash
 
-      - name: Load Updated PATH for Bundler
-        run: source $GITHUB_ENV
-
       - name: Install dependencies with Bundler
+        env:
+          PATH: ${{ env.PATH }}:$HOME/.local/share/gem/ruby/3.0.0/bin  # Ensures PATH is set for this step
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
 
       - name: Run RuboCop
         run: |
-          bundle exec rubocop         
+          bundle exec rubocop
+          
+             
   # SAST Job
   sast:
     runs-on: ubuntu-latest
