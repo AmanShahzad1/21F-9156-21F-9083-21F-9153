@@ -60,8 +60,6 @@ jobs:
         run: |
           docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
   
-
-
   # Linter Job
   lint:
     runs-on: ubuntu-latest
@@ -69,22 +67,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install Ruby
+      - name: Install dependencies for rbenv
         run: |
           sudo apt-get update
-          sudo apt-get install -y ruby-full
+          sudo apt-get install -y libreadline-dev libssl-dev zlib1g-dev
+          curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer | bash
+          echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bashrc
+          echo 'eval "$(rbenv init -)"' >> ~/.bashrc
+          source ~/.bashrc
+          rbenv install 3.1.2
+          rbenv global 3.1.2
           ruby -v
 
-      - name: Install Bundler Locally
+      - name: Install Bundler
         run: |
           gem install bundler -v 2.3.11 --user-install
           echo "PATH=$PATH:$HOME/.local/share/gem/ruby/3.0.0/bin" >> $GITHUB_ENV
-          source $GITHUB_ENV  # Immediately source the updated PATH to make Bundler available
+          echo "Bundler installed at: $(which bundler)"
+        shell: bash
+
+      - name: Update PATH for Bundler
+        run: |
+          source $GITHUB_ENV
+          which bundle || echo "Bundle not found"
+          bundle -v || echo "Bundle command still not found"
         shell: bash
 
       - name: Install dependencies with Bundler
         env:
-          PATH: ${{ env.PATH }}:$HOME/.local/share/gem/ruby/3.0.0/bin  # Ensures PATH is set for this step
+          PATH: ${{ env.PATH }}:$HOME/.local/share/gem/ruby/3.0.0/bin
         run: |
           bundle config set --local path 'vendor/bundle'
           bundle install
