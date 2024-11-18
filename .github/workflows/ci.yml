@@ -62,16 +62,16 @@ jobs:
   
  # Linter Job
   lint:
-  runs-on: ubuntu-latest
-  steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Run RuboCop in Docker
-      run: |
-        docker run --rm \
-          -v $(pwd):/app \
-          ruby:3.1.2 bash -c "gem install rubocop && rubocop"
+      - name: Run RuboCop in Docker
+        run: |
+          docker run --rm \
+            -v $(pwd):/app \
+            ruby:3.1.2 bash -c "gem install rubocop && rubocop"
 
 
 
