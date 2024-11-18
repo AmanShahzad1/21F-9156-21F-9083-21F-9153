@@ -62,27 +62,17 @@ jobs:
   
  # Linter Job
   lint:
-    runs-on: ubuntu-latest
-    steps:
-      # Step 1: Checkout code
-      - name: Checkout code
-        uses: actions/checkout@v2
+  runs-on: ubuntu-latest
+  steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
 
-      # Step 2: Set up Ruby
-      - name: Set up Ruby
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: 3.1.2 # Specify the desired Ruby version
-          bundler-cache: true # Cache gems to speed up subsequent runs
+    - name: Run RuboCop in Docker
+      run: |
+        docker run --rm \
+          -v $(pwd):/app \
+          ruby:3.1.2 bash -c "gem install rubocop && rubocop"
 
-      # Step 3: Install RuboCop
-      - name: Install RuboCop
-        run: |
-          gem install rubocop
-
-      # Step 4: Run RuboCop
-      - name: Run RuboCop
-        run: rubocop
 
 
 # SAST Job
