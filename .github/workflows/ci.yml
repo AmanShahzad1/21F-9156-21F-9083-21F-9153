@@ -67,11 +67,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install RuboCop
-        run: gem install rubocop
+      - name: Install RuboCop locally
+        run: |
+          gem install rubocop --user-install
+          echo "PATH=$(ruby -e 'print Gem.user_dir')/bin:$PATH" >> $GITHUB_ENV
 
       - name: Run RuboCop
         run: rubocop
+
 
   # SAST Job
   sast:
