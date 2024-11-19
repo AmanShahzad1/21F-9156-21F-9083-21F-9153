@@ -12,18 +12,18 @@ RUN apt-get update && apt-get install -y \
     entr && \
     rm -rf /var/lib/apt/lists/*  # Clean up
 
-# Install RuboCop (for linting)
+# Install RuboCop for linting
 RUN gem install rubocop -v 1.24
 
-# Copy Gemfile and Gemfile.lock first to take advantage of Docker caching
+# Copy Gemfile and Gemfile.lock to leverage caching
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
 
-# Copy the entire app
+# Copy the app
 COPY . .
 
-# Expose the app port
+# Expose app port (optional, not required for linting)
 EXPOSE 3000
 
-# Allow hot-reloading for development
+# Command to start Rails (not relevant for RuboCop)
 CMD ["bash", "-c", "rm -f tmp/pids/server.pid && rails server -b 0.0.0.0 -p 3000"]
