@@ -59,21 +59,25 @@ jobs:
       - name: Run Unit Tests
         run: |
           docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
-  
- # Linter Job
   lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Build Docker image
-        run: docker build -t myapp .
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.1.2
 
-      - name: Run RuboCop inside Docker container
-        run: docker run --rm myapp rubocop
+      - name: Install dependencies
+        run: |
+          gem install bundler
+          bundle install
 
-
+      - name: Run RuboCop
+        run: |
+          bundle exec rubocop
 
 
 
