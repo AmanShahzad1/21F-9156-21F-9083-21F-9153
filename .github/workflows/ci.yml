@@ -80,32 +80,24 @@ jobs:
   # SAST Job
   sast:
     runs-on: ubuntu-latest
-    needs: cache
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Install dependencies for rbenv
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libreadline-dev libssl-dev zlib1g-dev git
-          curl -fsSL https://github.com/rbenv/rbenv-installer/raw/main/bin/rbenv-installer | bash
-          export PATH="$HOME/.rbenv/bin:$PATH"
-          eval "$(rbenv init -)"
-          source ~/.bashrc
-          rbenv install 3.1.2
-          rbenv global 3.1.2
-          ruby -v
-
-      - name: Install Brakeman for SAST
+      - name: Install Brakeman Locally
         run: |
           gem install brakeman --user-install
-          export PATH="$HOME/.local/share/gem/ruby/3.1.2/bin:$PATH"
+          echo "PATH=$(ruby -e 'print Gem.user_dir')/bin:$PATH" >> $GITHUB_ENV
 
-      - name: Run Brakeman
-        run: |
-          source ~/.bashrc
-          brakeman
+      - name: Run Brakeman for SAST
+        run: brakeman -o brakeman-report.json
+
+      - name: Upload Brakeman Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: brakeman-report
+          path: brakeman-report.json
+
 
   # Upload Test Results as Artifacts
   upload-test-results:
