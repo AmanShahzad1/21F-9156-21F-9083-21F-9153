@@ -12,6 +12,9 @@ RUN apt-get update && apt-get install -y \
     entr && \
     rm -rf /var/lib/apt/lists/*  # Clean up
 
+# Install RuboCop (for linting)
+RUN gem install rubocop -v 1.24
+
 # Copy Gemfile and Gemfile.lock first to take advantage of Docker caching
 COPY Gemfile Gemfile.lock ./
 RUN bundle install
