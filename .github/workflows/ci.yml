@@ -59,7 +59,7 @@ jobs:
 
       - name: Run Unit Tests
         run: |
-          docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rails test
+          docker run --rm ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} bundle exec rspec
 
   # Lint Job
   lint:
