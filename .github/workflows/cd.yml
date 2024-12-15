@@ -26,10 +26,10 @@ jobs:
         uses: hashicorp/setup-terraform@v1
       - name: Initialize Terraform
         run: terraform init
-        working-directory: /home/aman/Desktop/DevOps\ A4/terraform-k8s   # Update this path
+        working-directory: /home/aman/Desktop/DevOps\ A4/terraform-k8s/   # Update this path
       - name: Apply Terraform
         run: terraform apply -auto-approve
-        working-directory: /home/aman/Desktop/DevOps\ A4/terraform-k8s   # Update this path
+        working-directory: /home/aman/Desktop/DevOps\ A4/terraform-k8s/  # Update this path
       - name: Deploy with Helm
         run: |
           helm upgrade --install my-ror-app ./helm/my-ror-app \
