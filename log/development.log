@@ -11067,3 +11067,29 @@ Importmap skipped missing path: friends_search.js
 Completed 200 OK in 154ms (Views: 120.1ms | ActiveRecord: 0.0ms | Allocations: 45604)
 
 
+Started GET "/" for 172.18.0.1 at 2024-12-12 16:40:45 +0000
+Cannot render console from 172.18.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.2ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by FriendsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering friends/index.html.erb within layouts/application
+  Rendered friends/index.html.erb within layouts/application (Duration: 12.2ms | Allocations: 1281)
+Importmap skipped missing path: friends_search.js
+  Rendered home/_header.html.erb (Duration: 2.3ms | Allocations: 525)
+  Rendered layout layouts/application.html.erb (Duration: 348.2ms | Allocations: 49633)
+Completed 200 OK in 422ms (Views: 364.3ms | ActiveRecord: 0.0ms | Allocations: 58238)
+
+
+Started GET "/" for 172.18.0.1 at 2024-12-12 19:47:03 +0000
+Cannot render console from 172.18.0.1! Allowed networks: 127.0.0.0/127.255.255.255, ::1
+  [1m[36mActiveRecord::SchemaMigration Pluck (0.5ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+Processing by FriendsController#index as HTML
+  Rendering layout layouts/application.html.erb
+  Rendering friends/index.html.erb within layouts/application
+  Rendered friends/index.html.erb within layouts/application (Duration: 13.9ms | Allocations: 1173)
+Importmap skipped missing path: friends_search.js
+  Rendered home/_header.html.erb (Duration: 2.9ms | Allocations: 525)
+  Rendered layout layouts/application.html.erb (Duration: 139.8ms | Allocations: 37267)
+Completed 200 OK in 177ms (Views: 145.2ms | ActiveRecord: 0.0ms | Allocations: 42613)
+
+

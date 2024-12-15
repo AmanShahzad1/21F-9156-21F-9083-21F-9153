@@ -20,15 +20,15 @@ Rails.application.configure do
   # or in config/master.key. This key is used to decrypt credentials (and other encrypted files).
   # config.require_master_key = true
 
-  # Disable serving static files from the `/public` folder by default since
-  # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present?
+  # Serve static files from the `/public` folder in production.
+  config.public_file_server.enabled = ENV["RAILS_SERVE_STATIC_FILES"].present? || ENV["RAILS_ENV"] == "production"
 
   # Compress CSS using a preprocessor.
   # config.assets.css_compressor = :sass
 
-  # Do not fallback to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = false
+  # Fallback to the assets pipeline if a precompiled asset is missed.
+  # Change to `false` in a properly precompiled production environment.
+  config.assets.compile = true
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
@@ -91,7 +91,10 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
+  # Serve assets in production.
+  config.serve_static_assets = true
+  config.assets.digest = true
 
-  #config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
-
+  # Warn when SQLite is used in production.
+  config.active_record.sqlite3_production_warning = false
 end
