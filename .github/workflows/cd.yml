@@ -16,19 +16,20 @@ jobs:
         docker build -t ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }} .
         docker push ${{ secrets.DOCKER_USERNAME }}/my_ror_app:${{ github.sha }}
 
-  deploy-to-aws:
+ deploy-to-aws:
     needs: build-and-push
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+    - name: Check out code
+      uses: actions/checkout@v2
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: '1.1.0'  # specify your version
-    - name: Terraform Init and Apply
-      run: |
-        terraform init
-        terraform apply -auto-approve
+    - name: Initialize Terraform
+      run: terraform init
+      working-directory: /home/aman/Desktop/DevOps A4/terraform-k8s/  # Update this path
+    - name: Apply Terraform
+      run: terraform apply -auto-approve
+      working-directory: /home/aman/Desktop/DevOps A4/terraform-k8s/ # Update this path
     - name: Deploy with Helm
       run: |
         helm upgrade --install my-ror-app ./helm/my-ror-app \
